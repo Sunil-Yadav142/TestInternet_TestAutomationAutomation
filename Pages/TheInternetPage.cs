@@ -2,6 +2,7 @@
 using OpenQA.Selenium;
 using TestProject1.Framework;
 using TestProject1.Framework.Config;
+using TestProject1.Framework.Utilities;
 
 namespace TestProject1.Pages
 {
@@ -21,11 +22,13 @@ namespace TestProject1.Pages
         // Actions
         public void ClickLogin()
         {
+            Logger.Info("Clicking Login button");
             driver.FindElement(loginButton).Click();
         }
 
         public void EnterUsername(string name)
         {
+            Logger.Info($"Entering username : {name}");
             driver.FindElement(username).SendKeys(name);
         }
     }
