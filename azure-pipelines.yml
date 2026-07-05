@@ -28,19 +28,19 @@ steps:
 # =========================
 # 2. Restore (EXPLICIT SLN FIX)
 # =========================
-- script: dotnet restore TestInternet_TestAutomationAutomation.sln
+- script: dotnet restore TestInternet_TestAutomation.sln
   displayName: 'Restore NuGet packages'
 
 # =========================
 # 3. Build (EXPLICIT SLN FIX)
 # =========================
-- script: dotnet build TestInternet_TestAutomationAutomation.sln --configuration $(buildConfiguration)
+- script: dotnet build TestInternet_TestAutomation.sln --configuration $(buildConfiguration)
   displayName: 'Build solution'
 
 # =========================
 # 4. Run Tests
 # =========================
-- script: dotnet test TestInternet_TestAutomationAutomation.sln --configuration $(buildConfiguration) --logger trx
+- script: dotnet test TestInternet_TestAutomation.sln --configuration $(buildConfiguration) --logger trx
   displayName: 'Run Selenium NUnit Tests'
 
 # =========================
