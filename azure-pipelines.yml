@@ -1,0 +1,59 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+
+# =========================
+# 1. Install .NET SDK
+# =========================
+- task: UseDotNet@2
+  inputs:
+    packageType: 'sdk'
+    version: '8.x'   # change to 6.x or 7.x if your project uses older .NET
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+# =========================
+# 2. Restore NuGet packages
+# =========================
+- script: dotnet restore
+  displayName: 'Restore dependencies'
+
+# =========================
+# 3. Build solution
+# =========================
+- script: dotnet build --configuration $(buildConfiguration) --no-restore
+  displayName: 'Build solution'
+
+# =========================
+# 4. Run NUnit Selenium Tests
+# =========================
+- script: dotnet test --configuration $(buildConfiguration) --no-build ^
+    --logger "trx;LogFileName=test_results.trx" ^
+    --results-directory $(Agent.TempDirectory)/TestResults
+  displayName: 'Run Selenium NUnit Tests'
+
+# =========================
+# 5. Publish Test Results to Azure DevOps
+# =========================
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'VSTest'
+    testResultsFiles: '**/*.trx'
+    searchFolder: '$(Agent.TempDirectory)/TestResults'
+    failTaskOnFailedTests: true
+    testRunTitle: 'Selenium NUnit Test Run'
+
+# =========================
+# 6. Publish artifacts (optional)
+# =========================
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
