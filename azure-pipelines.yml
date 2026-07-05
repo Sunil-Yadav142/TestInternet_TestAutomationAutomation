@@ -9,20 +9,25 @@ variables:
 
 steps:
 
+# Install .NET 8 SDK
 - task: UseDotNet@2
   inputs:
     packageType: 'sdk'
     version: '8.x'
 
+# Restore
 - script: dotnet restore
-  displayName: 'Restore packages'
+  displayName: 'Restore NuGet packages'
 
-- script: dotnet build --configuration $(buildConfiguration)
+# Build
+- script: dotnet build --configuration $(buildConfiguration) --no-restore
   displayName: 'Build solution'
 
-- script: dotnet test --configuration $(buildConfiguration) --logger trx
-  displayName: 'Run tests'
+# Run tests (NUnit + Selenium)
+- script: dotnet test --configuration $(buildConfiguration) --no-build --logger trx
+  displayName: 'Run NUnit Selenium tests'
 
+# Publish results
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest'
