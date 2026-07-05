@@ -52,3 +52,9 @@ steps:
     testResultsFiles: '**/*.trx'
     failTaskOnFailedTests: true
     testRunTitle: 'Selenium NUnit Tests'
+# 6. Publish Test Logs
+# =========================
+    - task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: 'logs'
+    ArtifactName: 'TestLogs'
